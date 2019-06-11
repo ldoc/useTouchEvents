@@ -2,11 +2,11 @@ const path = require('path');
 
 const hwp = require('html-webpack-plugin');
 
-const SRC_DIR = path.join(__dirname, '/src/');
-const DIST_DIR = path.join(__dirname, '/dist/');
+const SRC_DIR = path.join(__dirname, '/src');
+const DIST_DIR = path.join(__dirname, '/build');
 
 module.exports = {
-  entry: path.join(SRC_DIR + 'index.js'),
+  entry: path.join(SRC_DIR + '/index.js'),
   output: {
     filename: 'build.js',
     path: DIST_DIR,
@@ -24,6 +24,6 @@ module.exports = {
     }]
   },
   plugins:[
-    new hwp({template: SRC_DIR + 'index.html'})
+    new hwp({template: SRC_DIR + '/index.html'})
   ]
 }

@@ -2,14 +2,18 @@
   "name": "usetouchevents",
   "version": "1.0.0",
   "description": "custom hook to implement touch events",
+  "homepage": "https://github.com/ldoc/useTouchEvents",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
-    "build": "webpack - mode production"
+    "build": "webpack",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build"
   },
   "author": "ldoc",
   "license": "ISC",
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },

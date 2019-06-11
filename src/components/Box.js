@@ -7,7 +7,7 @@ const Box = (props) => {
   const elRef = useRef(null);
 
   const events = useCallback(e => {
-    if(e.action === 'click') setBox((b) => {return {...b,c: b.c === 'red' ? 'green' : 'red'}})
+    if(e.action === 'click') setBox((b) => {return {...b,c: b.c === 'red' ? 'yellow' : 'red'}})
     else if (e.action === 'press') setBox((b) => {return {...b,s: b.s + (b.c === 'red' ? 1 : -1)}})
     else if (e.action === 'pan') setBox((b) => {return {...b,x: e.x,y:e.y}})
     else if (e.action === 'pinch') setBox((b) => {return {...b,a: b.a + 1}})
@@ -25,7 +25,7 @@ const Box = (props) => {
       width: `${box.s}px`,
       backgroundColor: box.c,
       border: 'solid 1px black',
-      transform: 'rotate(12deg)'
+      transform: `rotate(${box.a}deg)`
     }}>
   </div>
 }
