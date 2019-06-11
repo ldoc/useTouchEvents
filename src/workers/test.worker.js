@@ -32,7 +32,15 @@ const move = (t,inacT) => {
     if(inacT.length === 0) postMessage({action: 'pan',id:t[0].id,x: t[0].x, y:t[0].y});
   }
   else if(t.length === 2){
-    postMessage({action: 'pinch',id:t[0].id});
+
+    const oldA = oldTouches.find((oT) => oT.id === t[0].id);
+    const dAx = t[0].x - (oldA ? oldA.x : 0);
+    const dAy = t[0].y - (oldA ? oldA.y : 0);
+    const oldB = oldTouches.find((oT) => oT.id === t[1].id);
+    const dBx = t[1].x - (oldB ? oldB.x : 0);
+    const dBy = t[1].y - (oldB ? oldB.y : 0);
+    console.log({action: 'pinch',id:t[0].id,dAx,dAy,dBx,dBy});
+    postMessage({action: 'pinch',id:t[0].id,dAx,dAy,dBx,dBy});
   }
 }
 
@@ -57,12 +65,10 @@ const end = (t) => {
 }
 
 const processEvent = (e) => {
-  //console.log(`--> ${e.type} | ${e.touches.reduce((a,b) => {return a + b.id} ,'')}`)
   currentAction = 'none';
 
   const touches = e.touches;
   const inactiveTouches = e.inactiveTouches;
-  const NUM_TOUCHES = e.touches.length;
 
   switch(e.type){
     case 'start':
