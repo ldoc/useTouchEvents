@@ -5,21 +5,23 @@ let currentAction = null;
 let timers = {};
 let pressTimers = {};
 
-const setPress = (id) => {
+const setPress = (id,x,y) => {
   delete timers[id];
-  let pTimer = setInterval(() => postMessage({action: 'press',id:id}),1000/60);
+  let pTimer = setInterval(() => postMessage({action: 'press',id:id,x,y}),1000/60);
   pressTimers[id] = pTimer;
 }
 
-const start = (t) => {
+const start = (t,listen) => {
   // init timers to check if it's click or press event
-  for(let i=0;i<t.length;t++){
-    let timer = setTimeout(setPress.bind(this,t[i].id),200);
-    timers[t[i].id] = timer;
+  if(listen.click || listen.press){
+    for(let i=0;i<t.length;t++){
+      let timer = setTimeout(setPress.bind(this,t[i].id,t[i].x,t[i].y),200);
+      timers[t[i].id] = timer;
+    }
   }
 }
 
-const move = (t,inacT) => {
+const move = (t,inacT,listen) => {
   if(t.length === 1){
     if(timers[t[0].id]){
       clearTimeout(timers[t[0].id]);
@@ -44,11 +46,11 @@ const move = (t,inacT) => {
   }
 }
 
-const end = (t) => {
+const end = (t,listen) => {
   for(let i=0;i<t.length;t++){
     if(timers[t[i].id]){
       //click
-      postMessage({action: 'click',id:t[i].id});
+      postMessage({action: 'click',id:t[i].id,x: t[i].x, y:t[i].y});
       clearTimeout(timers[t[i].id]);
       delete timers[t[i].id];
       postMessage({action: 'none'});
@@ -72,13 +74,13 @@ const processEvent = (e) => {
 
   switch(e.type){
     case 'start':
-      start(touches);
+      start(touches,e.listen);
       break;
     case 'move':
-      move(touches,inactiveTouches) ;
+      move(touches,inactiveTouches,e.listen) ;
       break;
     case 'end':
-      end(touches);
+      end(touches,e.listen);
       break;
     default: console.log('ERROR');
   }

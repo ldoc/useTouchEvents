@@ -5,10 +5,10 @@ const useTouchEvents = (ref,config) => {
   const worker = useRef(null);
   const touches = useRef(null);
 
-  const [action,setAction] = useState('none');
+  const [action,setAction] = useState({action:'none'});
 
   const processEvent = (event) => {
-    worker.current.postMessage(event);
+    worker.current.postMessage({...event,...config});
   }
 
   const eventData = (e,t) => {
@@ -36,8 +36,8 @@ const useTouchEvents = (ref,config) => {
     worker.current = new Worker();
 
     worker.current.onmessage = function (oEvent) {
-      if(oEvent.data.action !== 'none') requestAnimationFrame(config.handler.bind(this, {...oEvent.data,target: touches.current.find((t) => t.identifier === oEvent.data.id).target}));
-      setAction(oEvent.data.action);
+      //if(oEvent.data.action !== 'none') requestAnimationFrame(config.handler.bind(this, {...oEvent.data,target: touches.current.find((t) => t.identifier === oEvent.data.id).target}));
+      if(oEvent.data.action !== action.action) setAction(oEvent.data);
     };
 
     const t = ref.current;
