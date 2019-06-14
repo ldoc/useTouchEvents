@@ -3,15 +3,17 @@ import useTouchEvents from "../hooks/useTouchEvents";
 
 const Box = (props) => {
 
-  const [box,setBox] = useState({x:props.x,y:props.y,s:100,c:'red',a:0})
+  const [box,setBox] = useState({x:props.x,y:props.y,s:150,c:'red',a:0})
   const elRef = useRef(null);
-  const action = useTouchEvents(elRef, { listen: {click:true}});
+  const action = useTouchEvents(elRef, { listen: {click:true,press:true,pan:true}});
 
   useEffect(()=>{
+    console.log(action.action)
     if(action.action === 'click') setBox((b) => {return {...b,c: b.c === 'red' ? 'yellow' : 'red'}})
     else if (action.action === 'press') setBox((b) => {return {...b,s: b.s + (b.c === 'red' ? 1 : -1)}})
     else if (action.action === 'pan') setBox((b) => {return {...b,x: action.x,y:action.y}})
-    else if (action.action === 'pinch') setBox((b) => {return {...b,a: b.a + 1}})
+    else if (action.action === 'rotate') setBox((b) => {return {...b,a: b.a + 1}})
+    else if (action.action === 'pinch') setBox((b) => {return {...b,s: b.s + (b.c === 'red' ? 1 : -1)}})
   },[action])
 
   return <div
@@ -24,7 +26,8 @@ const Box = (props) => {
       width: `${box.s}px`,
       backgroundColor: box.c,
       border: 'solid 1px black',
-      transform: `rotate(${box.a}deg)`
+      transform: `rotate(${box.a}deg)`,
+      transformOrigin: 'center center'
     }}>
     {JSON.stringify(action)}
   </div>

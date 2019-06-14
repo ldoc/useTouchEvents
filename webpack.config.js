@@ -25,5 +25,6 @@ module.exports = {
   },
   plugins:[
     new hwp({template: SRC_DIR + '/index.html'})
-  ]
+  ],
+  devtool: 'source-map'
 }
