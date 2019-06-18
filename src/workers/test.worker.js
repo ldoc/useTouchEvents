@@ -25,7 +25,7 @@ const initializeConfig = (config) => {
 
 // Dispatch a concrete event
 const processEvent = (e) => {
-
+  console.log(e.type)
   const t = e.touches;
 
   // console.log('EVENT -> ' + e.type)
@@ -73,30 +73,33 @@ const move = (t) => {
     const dx = ot.x - t[i].x;
     const dy = ot.y - t[i].y;
     const inc = Math.sqrt(dx*dx + dy*dy);
-    // console.log(inc);
-    if(!ot.moving && listen.c_or_p){
-
-      if( inc > 5.0){
-        if(timers[t[i].id]){
-          // console.log('CANCEL CLICK')
-          clearTimeout(timers[t[i].id]);
-          delete timers[t[i].id];
-        }
-        else if(pressTimers[t[i].id]){
-          // console.log('CANCEL PRESS')
-          clearInterval(pressTimers[t[i].id]);
-          delete pressTimers[t[i].id];
-        }
+     console.log(inc);
+    if(!ot.moving){
+      if (pressTimers[t[i].id] && inc > 5.0){
+        console.log('CANCEL CLICK')
+        clearTimeout(timers[t[i].id]);
+        delete timers[t[i].id];
+      }
+      else if(pressTimers[t[i].id] && inc > 5.0){
+        console.log('CANCEL PRESS')
+        clearInterval(pressTimers[t[i].id]);
+        delete pressTimers[t[i].id];
       }
     }
-
-    if(listen.move){
-      if(listen.p_or_s){
-        if(!ot.moving){
-          timers[ot.id] = setTimeout(listen.swipe ? () => postMessage({action: 'swipe',id:t[i].id,x: t[i].x, y:t[i].y}) : null,200);
-        }
-        else if(!timers[ot.id] && ot.moving){
-          postMessage({action: 'pan',id:t[i].id,x: t[i].x, y:t[i].y})
+    else{
+      if(pressTimers[t[i].id]){
+        console.log('CANCEL PRESS')
+        clearInterval(pressTimers[t[i].id]);
+        delete pressTimers[t[i].id];
+      }
+      if(listen.move){
+        if(listen.p_or_s){
+          // if(!ot.moving){
+          //   timers[ot.id] = setTimeout(listen.swipe ? () => postMessage({action: 'swipe',id:t[i].id,x: t[i].x, y:t[i].y}) : null,200);
+          // }
+          // else if(!timers[ot.id] && ot.moving){
+            postMessage({action: 'pan',id:t[i].id,x: t[i].x, y:t[i].y})
+          // }
         }
       }
     }
